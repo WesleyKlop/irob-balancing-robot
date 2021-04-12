@@ -15,7 +15,6 @@ void setup() {
     motorSet.setSpeed(500);
 }
 
-bool ledState = LOW;
 void loop() {
     motorSet.step();
 }

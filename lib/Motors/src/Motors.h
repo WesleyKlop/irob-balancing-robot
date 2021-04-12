@@ -1,13 +1,20 @@
-//
-// Created by Wesley Klop on 08/04/2021.
-//
-
 #ifndef BALANCINGROBOT_MOTORS_H
 #define BALANCINGROBOT_MOTORS_H
 
+#include <Arduino.h>
+#include <Wire.h>
+
 
 class Motors {
+    int stepPin;
+    int dirPin;
 
+public:
+    explicit Motors(int stepPin, int dirPin);
+
+    void init() const;
+
+    void test() const;
 };
 
 

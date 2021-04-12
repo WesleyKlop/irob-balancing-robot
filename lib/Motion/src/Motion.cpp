@@ -1,4 +1,3 @@
-
 #include "Motion.h"
 
 Motion::Motion(int addr) {

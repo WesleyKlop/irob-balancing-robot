@@ -7,20 +7,19 @@
 
 class Motors {
     int stepPin;
-    int directionPin;
-    int speed = 500;
+    volatile int directionPin;
+    volatile int speed = 500;
 
 public:
     explicit Motors(int stepPin, int dirPin);
 
     void init() const;
 
-    void step() const;
-
     void setSpeed(int newSpeed);
 
-    void setDirection(bool direction);
+    void setDirection(bool direction) const;
 
+    void setStepState(bool newState) const;
 };
 
 

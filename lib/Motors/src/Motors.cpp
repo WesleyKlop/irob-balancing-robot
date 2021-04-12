@@ -11,17 +11,14 @@ void Motors::init() const {
     digitalWrite(this->directionPin, HIGH);
 }
 
-void Motors::step() const {
-    digitalWrite(this->stepPin, HIGH);
-    delayMicroseconds(this->speed);
-    digitalWrite(this->stepPin, LOW);
-    delayMicroseconds(this->speed);
+void Motors::setStepState(bool newState) const {
+    digitalWrite(this->stepPin, newState);
 }
 
 void Motors::setSpeed(int newSpeed) {
     this->speed = newSpeed;
 }
 
-void Motors::setDirection(bool direction) {
+void Motors::setDirection(bool direction) const {
     digitalWrite(this->directionPin, direction);
 }

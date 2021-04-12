@@ -8,13 +8,20 @@
 class Motors {
     int stepPin;
     int dirPin;
+    int speed = 500;
+    bool direction = false;
 
 public:
     explicit Motors(int stepPin, int dirPin);
 
     void init() const;
 
-    void test() const;
+    void step() const;
+
+    void setSpeed(int newSpeed);
+
+    void setDirection(bool forward);
+
 };
 
 

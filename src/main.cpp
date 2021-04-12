@@ -12,10 +12,10 @@ void setup() {
     Serial.begin(115200);
 
     motorSet.init();
-
-
+    motorSet.setSpeed(500);
 }
 
+bool ledState = LOW;
 void loop() {
-    motorSet.test();
+    motorSet.step();
 }

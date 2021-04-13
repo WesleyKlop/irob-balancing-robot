@@ -18,10 +18,6 @@ void Motor::setStepState(bool newState) const {
     digitalWrite(this->stepPin, newState);
 }
 
-void Motor::setSpeed(int newSpeed) {
-    this->speed = newSpeed;
-}
-
 void Motor::setDirection(bool direction) const {
     digitalWrite(this->directionPin, this->invert == !direction);
 }

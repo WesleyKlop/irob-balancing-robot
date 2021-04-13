@@ -4,13 +4,11 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-
 class Motor {
 private:
     bool invert;
     int stepPin;
-    volatile int directionPin;
-    volatile int speed = 500;
+    int directionPin;
 
 public:
     Motor(uint8_t stepPin, uint8_t dirPin, bool invert);
@@ -18,8 +16,6 @@ public:
     Motor(uint8_t stepPin, uint8_t dirPin);
 
     void init() const;
-
-    void setSpeed(int newSpeed);
 
     void setDirection(bool direction) const;
 

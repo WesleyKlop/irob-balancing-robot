@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <MotorSet.h>
+#include <Motion.h>
 
 #define MOTOR1_STEP_PIN 3
 #define MOTOR1_DIR_PIN 4
@@ -11,6 +12,7 @@ MotorSet motorSet(
         MOTOR1_STEP_PIN, MOTOR1_DIR_PIN,
         MOTOR2_STEP_PIN, MOTOR2_DIR_PIN
 );
+Motion motionSensor;
 
 void setupTimer1Interrupt() {
     noInterrupts();
@@ -42,6 +44,8 @@ void setup() {
     Serial.begin(115200);
 
     motorSet.init();
+    motionSensor.init();
+    
     setupTimer1Interrupt();
     configureTimer1Timings(3.0f, 1.5f);
 }
@@ -53,6 +57,8 @@ void loop() {
      * 2. Calculate required speed to compensate using some kind of easing function (PID)
      * 3. Update the speed
      */
+    float pitch = motionSensor.getPitch();
+    motorSet.setDirection(pitch < 0);
 }
 
 volatile unsigned long ticksFired = 0;

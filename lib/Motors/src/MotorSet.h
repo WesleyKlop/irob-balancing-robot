@@ -15,6 +15,8 @@ public:
     void init();
 
     void setStepState(bool newState);
+
+    void setDirection(bool newDirection);
 };
 
 

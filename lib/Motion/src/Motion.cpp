@@ -4,6 +4,8 @@ Motion::Motion(int addr) {
     this->mpu9250 = MPU9250_WE(addr);
 }
 
+Motion::Motion(): Motion(0x68) {}
+
 void Motion::calibrate() {
     /* The slope of the curve of acceleration vs measured values fits quite well to the theoretical
      * values, e.g. 16384 units/g in the +/- 2g range. But the starting point, if you position the

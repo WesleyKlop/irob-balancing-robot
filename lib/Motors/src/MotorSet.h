@@ -17,6 +17,8 @@ public:
     void setStepState(bool newState);
 
     void setDirection(bool newDirection);
+
+    void toggleStepState();
 };
 
 

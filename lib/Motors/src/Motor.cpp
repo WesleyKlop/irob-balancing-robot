@@ -14,10 +14,20 @@ void Motor::init() const {
     this->setDirection(HIGH);
 }
 
-void Motor::setStepState(bool newState) const {
-    digitalWrite(this->stepPin, newState);
+void Motor::setStepState(bool newState) {
+    this->currentStepState = newState;
+    this->flushStepState();
 }
 
 void Motor::setDirection(bool direction) const {
     digitalWrite(this->directionPin, this->invert == !direction);
+}
+
+void Motor::toggleStepState() {
+    this->currentStepState = !this->currentStepState;
+    this->flushStepState();
+}
+
+void Motor::flushStepState() const {
+    digitalWrite(this->stepPin, this->currentStepState);
 }

@@ -19,3 +19,8 @@ void MotorSet::setDirection(bool newDirection) {
     this->motor1.setDirection(newDirection);
     this->motor2.setDirection(newDirection);
 }
+
+void MotorSet::toggleStepState() {
+    this->motor1.toggleStepState();
+    this->motor2.toggleStepState();
+}

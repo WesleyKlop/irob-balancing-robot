@@ -7,6 +7,7 @@
 class Motor {
 private:
     bool invert;
+    volatile bool currentStepState = false;
     int stepPin;
     int directionPin;
 
@@ -19,8 +20,11 @@ public:
 
     void setDirection(bool direction) const;
 
-    void setStepState(bool newState) const;
+    void setStepState(bool newState);
 
+    void toggleStepState();
+
+    void flushStepState() const;
 };
 
 

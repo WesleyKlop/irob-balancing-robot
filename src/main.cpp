@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <TimerOne.h>
 #include <MotorSet.h>
 #include <Motion.h>
 
@@ -6,7 +7,6 @@
 #define MOTOR1_DIR_PIN 4
 #define MOTOR2_STEP_PIN 5
 #define MOTOR2_DIR_PIN 6
-#define PWM_FREQUENCY 64000
 
 MotorSet motorSet(
         MOTOR1_STEP_PIN, MOTOR1_DIR_PIN,
@@ -14,40 +14,16 @@ MotorSet motorSet(
 );
 Motion motionSensor;
 
-void setupTimer1Interrupt() {
-    noInterrupts();
-
-    /* Reset timer1 register entirely */
-    TCCR1A = 0;
-    TCCR1B = 0;
-    TCNT1 = 0;
-
-    OCR1A = 16000000 / PWM_FREQUENCY; // Configure compare match register
-    TCCR1B |= (1 << WGM12); // Configure CTC Mode
-    TCCR1B |= (1 << CS10); // Configure CS10 for 1 prescaler
-    TIMSK1 |= (1 << OCIE1A); // Enable timer compare interrupt
-
-    interrupts();
-}
-
-unsigned long pwmDutyCycleTicks;
-unsigned long pwmPeriodTicks;
-
-void configureTimer1Timings(const float periodMs, const float dutyCycleMs) {
-    // Calculate how many ticks the pin should be high for the desired on period
-    pwmDutyCycleTicks = (int) (dutyCycleMs / (1000.0f / PWM_FREQUENCY));
-    // Calculate the total amount of ticks a period takes.
-    pwmPeriodTicks = (int) (periodMs / (1000.0f / PWM_FREQUENCY));
-}
-
 void setup() {
     Serial.begin(115200);
 
     motorSet.init();
     motionSensor.init();
-    
-    setupTimer1Interrupt();
-    configureTimer1Timings(3.0f, 1.5f);
+
+    Timer1.initialize(1500);
+    Timer1.attachInterrupt([]() {
+        motorSet.toggleStepState();
+    });
 }
 
 void loop() {
@@ -59,21 +35,4 @@ void loop() {
      */
     float pitch = motionSensor.getPitch();
     motorSet.setDirection(pitch < 0);
-}
-
-volatile unsigned long ticksFired = 0;
-ISR(TIMER1_COMPA_vect) { // .5ms passed when this is fired
-    ticksFired++;
-
-    if (ticksFired == pwmPeriodTicks) {
-        // Reset the ticks and reset the pin to high for the restart of the duty cycles
-        ticksFired = 0;
-        motorSet.setStepState(HIGH);
-        return;
-    }
-
-    if (ticksFired == pwmDutyCycleTicks) {
-        // We have been HIGH for long enough now.
-        motorSet.setStepState(LOW);
-    }
 }

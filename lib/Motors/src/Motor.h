@@ -1,17 +1,21 @@
-#ifndef BALANCINGROBOT_MOTORS_H
-#define BALANCINGROBOT_MOTORS_H
+#ifndef BALANCINGROBOT_MOTOR_H
+#define BALANCINGROBOT_MOTOR_H
 
 #include <Arduino.h>
 #include <Wire.h>
 
 
-class Motors {
+class Motor {
+private:
+    bool invert;
     int stepPin;
     volatile int directionPin;
     volatile int speed = 500;
 
 public:
-    explicit Motors(int stepPin, int dirPin);
+    Motor(uint8_t stepPin, uint8_t dirPin, bool invert);
+
+    Motor(uint8_t stepPin, uint8_t dirPin);
 
     void init() const;
 
@@ -20,7 +24,8 @@ public:
     void setDirection(bool direction) const;
 
     void setStepState(bool newState) const;
+
 };
 
 
-#endif //BALANCINGROBOT_MOTORS_H
+#endif //BALANCINGROBOT_MOTOR_H

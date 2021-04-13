@@ -1,11 +1,16 @@
 #include <Arduino.h>
-#include <Motors.h>
+#include <MotorSet.h>
 
-#define STEP_PIN 3
-#define DIR_PIN 4
+#define MOTOR1_STEP_PIN 3
+#define MOTOR1_DIR_PIN 4
+#define MOTOR2_STEP_PIN 5
+#define MOTOR2_DIR_PIN 6
 #define PWM_FREQUENCY 64000
 
-Motors motorSet(STEP_PIN, DIR_PIN);
+MotorSet motorSet(
+        MOTOR1_STEP_PIN, MOTOR1_DIR_PIN,
+        MOTOR2_STEP_PIN, MOTOR2_DIR_PIN
+);
 
 void setupTimer1Interrupt() {
     noInterrupts();
@@ -25,6 +30,7 @@ void setupTimer1Interrupt() {
 
 unsigned long pwmDutyCycleTicks;
 unsigned long pwmPeriodTicks;
+
 void configureTimer1Timings(const float periodMs, const float dutyCycleMs) {
     // Calculate how many ticks the pin should be high for the desired on period
     pwmDutyCycleTicks = (int) (dutyCycleMs / (1000.0f / PWM_FREQUENCY));
@@ -37,7 +43,7 @@ void setup() {
 
     motorSet.init();
     setupTimer1Interrupt();
-    configureTimer1Timings(1.0f, 0.5f);
+    configureTimer1Timings(1.0f, 0.2f);
 }
 
 void loop() {
@@ -57,7 +63,6 @@ ISR(TIMER1_COMPA_vect) { // .5ms passed when this is fired
         // Reset the ticks and reset the pin to high for the restart of the duty cycles
         ticksFired = 0;
         motorSet.setStepState(HIGH);
-        digitalWrite(STEP_PIN, HIGH);
         return;
     }
 

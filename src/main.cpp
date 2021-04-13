@@ -43,7 +43,7 @@ void setup() {
 
     motorSet.init();
     setupTimer1Interrupt();
-    configureTimer1Timings(1.0f, 0.2f);
+    configureTimer1Timings(3.0f, 1.5f);
 }
 
 void loop() {

@@ -10,7 +10,7 @@ bot_height = .8;
 bot_depth = 4.50;
 
 // Padding around the edge of the board.
-padding = .3;
+padding = .5;
 
 // Size of the 4 screw holes
 hole_radius = .3 / 2;
@@ -65,7 +65,6 @@ difference() {
     translate([bot_width/2, bot_depth / 2 + (battery_hole_spacing / 2), 0])
         cylinder(h = bot_height, r = battery_hole_radius);
 }
-
 
 // Motors, battery packs
 %union() {

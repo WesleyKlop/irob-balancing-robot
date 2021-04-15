@@ -1,4 +1,4 @@
-$fn = 20;
+$fn = 10;
 
 /**
  * Source file for the 3D printed support for the balancing robot.
@@ -13,18 +13,28 @@ bot_depth = 4.50;
 padding = .5;
 
 // Size of the 4 screw holes
-hole_radius = .3 / 2;
+hole_radius = .2;
 
 // Stepper motor sizings
 motor_width = 2.5;
 motor_depth = 4;
+motor_inset = 1.5;
 
 // Size of the battery pack
 battery_width = 7.5;
 battery_depth = 4;
 battery_height = 2;
-battery_hole_radius = .25 / 2;
+battery_hole_radius = .3 / 2;
 battery_hole_spacing = 2;
+
+// Motor guard sizes
+guard_width = .5;
+guard_depth = motor_depth;
+guard_height = .5;
+
+tyrep_depth = ( bot_depth - motor_depth) / 2;
+tyrep_width = .4;
+
 
 difference() {
     // Base plate
@@ -64,16 +74,39 @@ difference() {
         cylinder(h = bot_height, r = battery_hole_radius);
     translate([bot_width/2, bot_depth / 2 + (battery_hole_spacing / 2), 0])
         cylinder(h = bot_height, r = battery_hole_radius);
+        
+    
+    // Tyreps
+    translate([motor_inset + (motor_width / 2) - (tyrep_width / 2), 0, 0])
+        cube([tyrep_width, tyrep_depth, bot_height]);
+    translate([motor_inset + (motor_width / 2) - (tyrep_width / 2), bot_depth - tyrep_depth, 0])
+        cube([tyrep_width, tyrep_depth, bot_height]);
+        
+    translate([bot_width - motor_inset - (motor_width / 2) - (tyrep_width / 2), 0, 0])
+        cube([tyrep_width, tyrep_depth, bot_height]);
+    translate([bot_width - motor_inset - (motor_width / 2) - (tyrep_width / 2), bot_depth - tyrep_depth, 0])
+        cube([tyrep_width, tyrep_depth, bot_height]);
 }
 
 // Motors, battery packs
 %union() {
-    translate([1.5, (bot_depth - motor_depth) / 2, bot_height])
+    translate([motor_inset, (bot_depth - motor_depth) / 2, bot_height])
         cube([motor_width, motor_depth, motor_depth]);
     
-    translate([bot_width - motor_width -1.5, (bot_depth - motor_depth) / 2, bot_height])
+    translate([bot_width - motor_width - motor_inset, (bot_depth - motor_depth) / 2, bot_height])
         cube([motor_width, motor_depth, motor_depth]);
     
     translate([(bot_width - battery_width) / 2, (bot_depth - battery_depth) / 2, bot_height])
         cube([battery_width, battery_depth, battery_height]);
 }
+
+// Motor guards
+translate([motor_inset - guard_width, (bot_depth - motor_depth) / 2, bot_height])
+    cube([guard_width, guard_depth, guard_height]);
+translate([motor_inset + motor_width, (bot_depth - motor_depth) / 2, bot_height])
+    cube([guard_width, guard_depth, guard_height]);
+
+translate([bot_width - motor_inset - guard_width - motor_width, (bot_depth - motor_depth) / 2, bot_height])
+    cube([guard_width, guard_depth, guard_height]);
+translate([bot_width - motor_inset, (bot_depth - motor_depth) / 2, bot_height])
+    cube([guard_width, guard_depth, guard_height]);

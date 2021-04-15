@@ -5,41 +5,41 @@ $fn = 100;
  * All dimensions are in centimeters, manually measured!
  */
 
-bot_width = 17.50;
-bot_height = .8;
-bot_depth = 4.50;
+bot_width = 175;
+bot_height = 8;
+bot_depth = 45;
 
 // Padding around the edge of the board.
-padding = .5;
+padding = 5;
 
 // Size of the 4 screw holes
-hole_radius = .2;
+hole_radius = 2;
 
 // Stepper motor sizings
-motor_width = 2.5;
-motor_depth = 4;
-motor_inset = 1.5;
+motor_width = 25;
+motor_depth = 40;
+motor_inset = 15;
 
 // Size of the battery pack
-battery_width = 7.5;
-battery_depth = 4;
-battery_height = 2;
-battery_hole_radius = .3 / 2;
-battery_hole_spacing = 2;
+battery_width = 75;
+battery_depth = 40;
+battery_height = 20;
+battery_hole_radius = 3 / 2;
+battery_hole_spacing = 20;
 
 // Motor guard sizes
-guard_width = .5;
+guard_width = 5;
 guard_depth = motor_depth;
-guard_height = .5;
+guard_height = 5;
 
-tyrep_depth = ( bot_depth - motor_depth) / 2;
-tyrep_width = .4;
+tyrep_depth = (bot_depth - motor_depth) / 2;
+tyrep_width = 4;
 
 
 difference() {
     // Base plate
     color("#6c71c4") hull() {
-        corner_radius = .25;
+        corner_radius = 2.5;
         translate([corner_radius, corner_radius, 0])
             cylinder(h=bot_height, r = corner_radius);
         translate([bot_width - corner_radius, corner_radius, 0])

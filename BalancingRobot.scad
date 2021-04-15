@@ -1,4 +1,4 @@
-$fn = 10;
+$fn = 100;
 
 /**
  * Source file for the 3D printed support for the balancing robot.
@@ -40,13 +40,13 @@ difference() {
     // Base plate
     color("#6c71c4") hull() {
         corner_radius = .25;
-        translate([ corner_radius, corner_radius, 0])
+        translate([corner_radius, corner_radius, 0])
             cylinder(h=bot_height, r = corner_radius);
-        translate([ bot_width - corner_radius, corner_radius, 0 ])
+        translate([bot_width - corner_radius, corner_radius, 0])
             cylinder(h=bot_height, r = corner_radius);
-        translate([ corner_radius, bot_depth - corner_radius, 0])
+        translate([corner_radius, bot_depth - corner_radius, 0])
             cylinder(h=bot_height, r = corner_radius);
-        translate([ bot_width - corner_radius, bot_depth - corner_radius, 0])
+        translate([bot_width - corner_radius, bot_depth - corner_radius, 0])
             cylinder(h=bot_height, r = corner_radius);
     }
       
@@ -60,22 +60,12 @@ difference() {
     translate([padding + hole_radius, bot_depth - padding - hole_radius, 0])
         cylinder(h = bot_height, r=hole_radius);
 
-    // 2 sidebars where we can latch things to
-//    sidebar_width = 8;
-//    sidebar_depth = hole_radius;
-//    sidebar_offset = bot_width / 2 - sidebar_width / 2;
-//    translate([sidebar_offset, padding, 0])
-//        cube([sidebar_width, sidebar_depth, bot_height]);
-//    translate([sidebar_offset, bot_depth - padding - sidebar_depth, 0])
-//        cube([sidebar_width, sidebar_depth, bot_height]);
-        
     // Battery holes
     translate([bot_width/2, bot_depth / 2 - (battery_hole_spacing / 2), 0])
         cylinder(h = bot_height, r = battery_hole_radius);
     translate([bot_width/2, bot_depth / 2 + (battery_hole_spacing / 2), 0])
         cylinder(h = bot_height, r = battery_hole_radius);
         
-    
     // Tyreps
     translate([motor_inset + (motor_width / 2) - (tyrep_width / 2), 0, 0])
         cube([tyrep_width, tyrep_depth, bot_height]);

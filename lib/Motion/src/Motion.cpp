@@ -89,4 +89,8 @@ float Motion::getPitch() {
 
 float Motion::getTemperature() {
     return this->mpu9250.getTemperature();
+}
+
+xyzFloat Motion::getGyrValues() {
+    return this->mpu9250.getGyrValues();
 };

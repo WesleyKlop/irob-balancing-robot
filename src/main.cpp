@@ -14,11 +14,12 @@ MotorSet motorSet(
 Motion motionSensor;
 
 unsigned long pitchToSpeed(long pitch);
+unsigned long rpmToPeriod(const unsigned long rpm, const StepResolution resolution);
 
 void setup() {
     Serial.begin(APP_BAUD_RATE);
 
-    motorSet.init(EIGHTH);
+    motorSet.init(SIXTEENTH);
     motionSensor.init();
 
     Timer1.initialize(MOTOR_SPEED_LOWER);
@@ -36,7 +37,7 @@ void loop() {
      * 2. Calculate required speed to compensate using some kind of easing function (PID)
      * 3. Update the speed
      */
-    float pitch = motionSensor.getPitch();
+    float pitch = motionSensor.getPitch() + motionSensor.getGyrValues().y;
     float absPitch = abs(pitch);
 
     motorSet.setDirection(pitch > 0);
@@ -48,10 +49,24 @@ void loop() {
     }
 
     // If the angle is too high, switch to EIGHTH step size.
-    motorSet.setResolution(absPitch >= 16 ? EIGHTH : SIXTEENTH);
+//    motorSet.setResolution(absPitch >= 16 ? EIGHTH : SIXTEENTH);
 
     Timer1.setPeriod(pitchToSpeed((long) absPitch));
     previousPitch = pitch;
+}
+
+/**
+ * Calculate the period of time we need to configure for a given rpm.
+ *
+ * Example:
+ *  say we want to rotate 45rpm. In half-step this is 200 * 2 = 400 steps for a rotation
+ *  then we want
+ * @param rpm
+ * @param resolution
+ * @return
+ */
+inline unsigned long rpmToPeriod(const unsigned long rpm, const StepResolution resolution) {
+    int stepsPerRotation = resolution * MOTOR_STEPS_PER_ROTATION;
 }
 
 inline unsigned long pitchToSpeed(const long pitch){

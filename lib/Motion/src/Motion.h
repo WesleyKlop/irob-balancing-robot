@@ -23,6 +23,8 @@ public:
     float getPitch();
 
     float getTemperature();
+
+    xyzFloat getGyrValues();
 };
 
 #endif //BALANCINGROBOT_MOTION_H

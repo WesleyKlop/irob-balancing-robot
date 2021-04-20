@@ -6,11 +6,11 @@
 #define BALANCINGROBOT_STEPRESOLUTION_H
 
 enum StepResolution {
-    FULL,
-    HALF,
-    QUARTER,
-    EIGHTH,
-    SIXTEENTH,
+    FULL = 1,
+    HALF = 2,
+    QUARTER = 4,
+    EIGHTH = 8,
+    SIXTEENTH = 16,
 };
 
 #endif //BALANCINGROBOT_STEPRESOLUTION_H

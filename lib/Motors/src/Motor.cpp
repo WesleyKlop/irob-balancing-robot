@@ -46,11 +46,11 @@ void Motor::toggleStepState() {
     this->flushStepState();
 }
 
-void Motor::flushStepState() const {
+inline void Motor::flushStepState() const {
     digitalWrite(this->stepPin, this->currentStepState);
 }
 
-void Motor::flushResolution() const {
+inline void Motor::flushResolution() const {
     switch (this->currentResolution) {
         case FULL:
             digitalWrite(this->ms1Pin, LOW);
@@ -80,6 +80,6 @@ void Motor::flushResolution() const {
     }
 }
 
-void Motor::flushDirection() const {
+inline void Motor::flushDirection() const {
     digitalWrite(this->directionPin, this->invert == !this->currentDirection);
 }

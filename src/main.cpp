@@ -2,21 +2,8 @@
 #include <TimerOne.h>
 #include <MotorSet.h>
 #include <Motion.h>
-//#include <StepResolution.h>
 
-#define MOTOR1_STEP_PIN 2
-#define MOTOR1_DIR_PIN 3
-#define MOTOR2_STEP_PIN 4
-#define MOTOR2_DIR_PIN 5
-#define MOTOR1_MS1_PIN 6
-#define MOTOR1_MS2_PIN 7
-#define MOTOR1_MS3_PIN 8
-#define MOTOR2_MS1_PIN 9
-#define MOTOR2_MS2_PIN 10
-#define MOTOR2_MS3_PIN 11
-
-#define MOTOR_SPEED_LOWER 1500
-#define MOTOR_SPEED_UPPER 50
+#include <constants.h>
 
 MotorSet motorSet(
         MOTOR1_STEP_PIN, MOTOR1_DIR_PIN,
@@ -26,8 +13,10 @@ MotorSet motorSet(
 );
 Motion motionSensor;
 
+unsigned long pitchToSpeed(long pitch);
+
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(APP_BAUD_RATE);
 
     motorSet.init(EIGHTH);
     motionSensor.init();
@@ -37,6 +26,8 @@ void setup() {
         motorSet.toggleStepState();
     });
 }
+
+float previousPitch;
 
 void loop() {
     /*
@@ -51,14 +42,19 @@ void loop() {
     motorSet.setDirection(pitch > 0);
 
     // In these cases we don't have to do anything
-    if (absPitch < 0.25 || absPitch > 45) {
-        // Stop motor when angle is below 1
+    if (absPitch < 0.25 || absPitch > 45 || pitch == previousPitch) {
+        // No changes required.
         return;
     }
 
     // If the angle is too high, switch to EIGHTH step size.
     motorSet.setResolution(absPitch >= 16 ? EIGHTH : SIXTEENTH);
 
-    unsigned long period = map((long) absPitch, 0, 45, MOTOR_SPEED_LOWER, MOTOR_SPEED_UPPER);
-    Timer1.setPeriod(period);
+    Timer1.setPeriod(pitchToSpeed((long) absPitch));
+    previousPitch = pitch;
+}
+
+inline unsigned long pitchToSpeed(const long pitch){
+    unsigned long period = map((long) pitch, 0, 45, MOTOR_SPEED_LOWER, MOTOR_SPEED_UPPER);
+    return period;
 }

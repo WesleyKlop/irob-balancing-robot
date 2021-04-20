@@ -13,7 +13,7 @@ Motor::Motor(const uint8_t stepPin, const uint8_t dirPin, uint8_t ms1Pin, uint8_
     this->ms3Pin = ms3Pin;
 }
 
-void Motor::init() {
+void Motor::init(StepResolution resolution) {
     pinMode(this->stepPin, OUTPUT);
     pinMode(this->directionPin, OUTPUT);
     pinMode(this->ms1Pin, OUTPUT);
@@ -22,6 +22,7 @@ void Motor::init() {
     pinMode(this->ms3Pin, OUTPUT);
 
     this->setDirection(HIGH);
+    this->setResolution(resolution);
 }
 
 void Motor::setResolution(StepResolution resolution) {

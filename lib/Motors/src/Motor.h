@@ -22,7 +22,7 @@ public:
 
     Motor(uint8_t stepPin, uint8_t dirPin, uint8_t ms1Pin, uint8_t ms2Pin, uint8_t ms3Pin);
 
-    void init();
+    void init(StepResolution resolution);
 
     void setDirection(bool direction);
 

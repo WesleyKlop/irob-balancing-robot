@@ -14,11 +14,13 @@ public:
              uint8_t motor2StepPin, uint8_t motor2DirPin,
              uint8_t motor2Ms1Pin, uint8_t motor2Ms2Pin, uint8_t motor2Ms3Pin);
 
-    void init();
+    void init(StepResolution resolution);
 
     void setDirection(bool newDirection);
 
     void toggleStepState();
+
+    void setResolution(StepResolution resolution);
 };
 
 

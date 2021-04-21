@@ -15,7 +15,7 @@ MotorSet motorSet(
 Motion motionSensor;
 
 double setPoint = 0, input, output;
-double Kp = .5, Ki = .25, Kd = 0;
+double Kp = .5, Ki = 0, Kd = 0;
 PID controller(&input, &output, &setPoint, Kp, Ki, Kd, P_ON_E, DIRECT);
 
 unsigned long rpmToPeriod(unsigned long rpm, StepResolution resolution);
@@ -26,8 +26,8 @@ void setup() {
     motorSet.init(SIXTEENTH);
     motionSensor.init();
 
-    controller.SetOutputLimits(0, 200);
-    controller.SetSampleTime(20);
+    controller.SetOutputLimits(-200, 200);
+    controller.SetSampleTime(5);
     controller.SetMode(AUTOMATIC);
 
     Timer1.initialize(MOTOR_SPEED_LOWER);
@@ -37,11 +37,8 @@ void setup() {
 }
 
 void loop() {
-    float pitch = motionSensor.getPitch();
-    // Change direction based on pitch
-    motorSet.setDirection(pitch > 0);
     // Combine pitch + acceleration into our PID input
-    input = abs(pitch + motionSensor.getAcceleration());
+    input = motionSensor.getAcceleration() + motionSensor.getPitch();
 
     // Uses our global input & output
     if (!controller.Compute()) {
@@ -49,15 +46,12 @@ void loop() {
         return;
     }
 
-    Serial.print("input: ");
-    Serial.print(input);
-    Serial.print(" \t| output: ");
-    Serial.println(output);
-
     // When output is 0 the Arduino freezes. (Timer would tick too fast)
     if (output == 0) {
         return;
     }
+
+    motorSet.setDirection(output < 0);
 
     Timer1.setPeriod(rpmToPeriod(abs(output), SIXTEENTH));
 }

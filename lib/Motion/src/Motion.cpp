@@ -75,14 +75,6 @@ void Motion::init() {
     this->mpu9250.setAccDLPF(MPU9250_DLPF_6);
 }
 
-xyzFloat Motion::getAngles() {
-    return this->mpu9250.getAngles();
-}
-
-float Motion::getRoll() {
-    return this->mpu9250.getRoll();
-}
-
 float Motion::getPitch() {
     return this->mpu9250.getPitch();
 }
@@ -91,6 +83,6 @@ float Motion::getTemperature() {
     return this->mpu9250.getTemperature();
 }
 
-xyzFloat Motion::getGyrValues() {
-    return this->mpu9250.getGyrValues();
+float Motion::getAcceleration() {
+    return this->mpu9250.getGyrValues().y;
 };

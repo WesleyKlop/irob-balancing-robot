@@ -16,15 +16,11 @@ public:
 
     void init();
 
-    xyzFloat getAngles();
-
-    float getRoll();
-
     float getPitch();
 
     float getTemperature();
 
-    xyzFloat getGyrValues();
+    float getAcceleration();
 };
 
 #endif //BALANCINGROBOT_MOTION_H

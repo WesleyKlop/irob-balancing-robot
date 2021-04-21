@@ -2,6 +2,7 @@
 #include <TimerOne.h>
 #include <MotorSet.h>
 #include <Motion.h>
+#include <PID_v1.h>
 
 #include <constants.h>
 
@@ -13,8 +14,11 @@ MotorSet motorSet(
 );
 Motion motionSensor;
 
-unsigned long pitchToSpeed(long pitch);
-unsigned long rpmToPeriod(const unsigned long rpm, const StepResolution resolution);
+double setPoint = 0, input, output;
+double Kp = .5, Ki = .25, Kd = 0;
+PID controller(&input, &output, &setPoint, Kp, Ki, Kd, P_ON_E, DIRECT);
+
+unsigned long rpmToPeriod(unsigned long rpm, StepResolution resolution);
 
 void setup() {
     Serial.begin(APP_BAUD_RATE);
@@ -22,54 +26,57 @@ void setup() {
     motorSet.init(SIXTEENTH);
     motionSensor.init();
 
+    controller.SetOutputLimits(0, 200);
+    controller.SetSampleTime(20);
+    controller.SetMode(AUTOMATIC);
+
     Timer1.initialize(MOTOR_SPEED_LOWER);
     Timer1.attachInterrupt([]() {
         motorSet.toggleStepState();
     });
 }
 
-float previousPitch;
-
 void loop() {
-    /*
-     * How this would probably work:
-     * 1. Get the current pitch of the gyroscope.
-     * 2. Calculate required speed to compensate using some kind of easing function (PID)
-     * 3. Update the speed
-     */
-    float pitch = motionSensor.getPitch() + motionSensor.getGyrValues().y;
-    float absPitch = abs(pitch);
-
+    float pitch = motionSensor.getPitch();
+    // Change direction based on pitch
     motorSet.setDirection(pitch > 0);
+    // Combine pitch + acceleration into our PID input
+    input = abs(pitch + motionSensor.getAcceleration());
 
-    // In these cases we don't have to do anything
-    if (absPitch < 0.25 || absPitch > 45 || pitch == previousPitch) {
-        // No changes required.
+    // Uses our global input & output
+    if (!controller.Compute()) {
+        // If we have no new data we don't have to do anything.
         return;
     }
 
-    // If the angle is too high, switch to EIGHTH step size.
-//    motorSet.setResolution(absPitch >= 16 ? EIGHTH : SIXTEENTH);
+    Serial.print("input: ");
+    Serial.print(input);
+    Serial.print(" \t| output: ");
+    Serial.println(output);
 
-    Timer1.setPeriod(pitchToSpeed((long) absPitch));
-    previousPitch = pitch;
+    // When output is 0 the Arduino freezes. (Timer would tick too fast)
+    if (output == 0) {
+        return;
+    }
+
+    Timer1.setPeriod(rpmToPeriod(abs(output), SIXTEENTH));
 }
+
 
 /**
  * Calculate the period of time we need to configure for a given rpm.
  *
  * Example:
  *  say we want to rotate 45rpm. In half-step this is 200 * 2 = 400 steps for a rotation
- *  then we want
+ *  this means that to go 45rm we do 400 * 45 = 18 000 steps per minute. A minute is 60 000 000 microseconds.
+ *  60 000 000 / 18 000 = 3333.333333333 microseconds per step. Because we toggle each time we need to half that.
  * @param rpm
  * @param resolution
  * @return
  */
 inline unsigned long rpmToPeriod(const unsigned long rpm, const StepResolution resolution) {
     int stepsPerRotation = resolution * MOTOR_STEPS_PER_ROTATION;
-}
+    unsigned long stepsPerMinute = stepsPerRotation * rpm;
 
-inline unsigned long pitchToSpeed(const long pitch){
-    unsigned long period = map((long) pitch, 0, 45, MOTOR_SPEED_LOWER, MOTOR_SPEED_UPPER);
-    return period;
+    return MICROSECONDS_PER_MINUTE / stepsPerMinute / 2;
 }

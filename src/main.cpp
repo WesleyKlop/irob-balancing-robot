@@ -2,7 +2,7 @@
 #include <TimerOne.h>
 #include <MotorSet.h>
 #include <Motion.h>
-#include <PID_v1.h>
+#include <Controller.h>
 
 #include <constants.h>
 
@@ -13,22 +13,16 @@ MotorSet motorSet(
         MOTOR2_MS1_PIN, MOTOR2_MS2_PIN, MOTOR2_MS3_PIN
 );
 Motion motionSensor;
-
-double setPoint = 0, input, output;
-double Kp = .5, Ki = 0, Kd = 0;
-PID controller(&input, &output, &setPoint, Kp, Ki, Kd, P_ON_E, DIRECT);
+Controller controller(2, 0, 0);
 
 unsigned long rpmToPeriod(unsigned long rpm, StepResolution resolution);
 
 void setup() {
     Serial.begin(APP_BAUD_RATE);
 
-    motorSet.init(SIXTEENTH);
     motionSensor.init();
-
-    controller.SetOutputLimits(-200, 200);
-    controller.SetSampleTime(5);
-    controller.SetMode(AUTOMATIC);
+    controller.init();
+    motorSet.init(SIXTEENTH);
 
     Timer1.initialize(MOTOR_SPEED_LOWER);
     Timer1.attachInterrupt([]() {
@@ -38,20 +32,21 @@ void setup() {
 
 void loop() {
     // Combine pitch + acceleration into our PID input
-    input = motionSensor.getAcceleration() + motionSensor.getPitch();
+    controller.setInput(motionSensor.getAcceleration() - motionSensor.getPitch());
 
     // Uses our global input & output
-    if (!controller.Compute()) {
+    if (!controller.compute()) {
         // If we have no new data we don't have to do anything.
         return;
     }
 
+    double output = controller.read();
     // When output is 0 the Arduino freezes. (Timer would tick too fast)
     if (output == 0) {
         return;
     }
 
-    motorSet.setDirection(output < 0);
+    motorSet.setDirection(output > 0);
 
     Timer1.setPeriod(rpmToPeriod(abs(output), SIXTEENTH));
 }
@@ -69,8 +64,5 @@ void loop() {
  * @return
  */
 inline unsigned long rpmToPeriod(const unsigned long rpm, const StepResolution resolution) {
-    int stepsPerRotation = resolution * MOTOR_STEPS_PER_ROTATION;
-    unsigned long stepsPerMinute = stepsPerRotation * rpm;
-
-    return MICROSECONDS_PER_MINUTE / stepsPerMinute / 2;
+    return MICROSECONDS_PER_MINUTE / (resolution * MOTOR_STEPS_PER_ROTATION * rpm) / 2;
 }

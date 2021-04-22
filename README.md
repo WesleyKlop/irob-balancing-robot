@@ -13,7 +13,7 @@ Hardware and wiring here
 * 1 MPU9250 Accelerometer / Gyroscope / Magnetometer
 * 2 A4988 stepper motor drivers
 * 2 bipolar stepper motors
-* 1 47 Uf-something capacitor to prevent voltage spikes to the driver.
+* 1 > 47 µF capacitor to prevent voltage spikes to the driver.
 * 1 big breadboard
 * Some big boy batteries to power everything. (I had 2x 3.7v batteries)
 
@@ -23,7 +23,7 @@ board you 3D printed with your 3D printer. :)
 
 ### Wiring
 
-See [src/constants.h](./src/constants.h) for which pin goes where. MPU9250 needs
+See [src/constants.h](include/constants.h) for which pin goes where. MPU9250 needs
 SCA / SCL cables connected to the Arduino nano.
 
 ## Software

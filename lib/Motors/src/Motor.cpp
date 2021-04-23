@@ -1,10 +1,11 @@
 #include "Motor.h"
 
-Motor::Motor(const uint8_t stepPin, const uint8_t dirPin, uint8_t ms1Pin, uint8_t ms2Pin, uint8_t ms3Pin) : Motor(
-        stepPin, dirPin, ms1Pin, ms2Pin, ms3Pin, false) {}
+Motor::Motor(const uint8_t stepPin, const uint8_t dirPin, uint8_t ms1Pin, uint8_t ms2Pin, uint8_t ms3Pin)
+        : Motor(stepPin, dirPin, ms1Pin, ms2Pin, ms3Pin, false) {}
 
-Motor::Motor(const uint8_t stepPin, const uint8_t dirPin, uint8_t ms1Pin, uint8_t ms2Pin, uint8_t ms3Pin,
-             const bool invert) {
+Motor::Motor(
+        const uint8_t stepPin, const uint8_t dirPin, uint8_t ms1Pin, uint8_t ms2Pin, uint8_t ms3Pin, const bool invert
+) {
     this->stepPin = stepPin;
     this->directionPin = dirPin;
     this->invert = invert;
@@ -34,7 +35,7 @@ void Motor::setResolution(StepResolution resolution) {
 }
 
 void Motor::setDirection(bool direction) {
-    if(this->currentDirection == direction) {
+    if (this->currentDirection == direction) {
         return;
     }
     this->currentDirection = direction;

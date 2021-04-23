@@ -2,7 +2,6 @@
 #define BALANCINGROBOT_MOTOR_H
 
 #include <Arduino.h>
-#include <Wire.h>
 #include <StepResolution.h>
 
 class Motor {

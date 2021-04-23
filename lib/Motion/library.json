@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "wollewald/MPU9250_WE": "^1.0.3"
+  }
+}

@@ -4,7 +4,9 @@
 
 #include "Controller.h"
 
-Controller::Controller(double p, double i, double d) : pid(&setPoint, &input, &output, p, i, d, P_ON_E, DIRECT) {}
+Controller::Controller(double p, double i, double d)
+        : pid(&input, &output, &setPoint, p, i, d, P_ON_E, DIRECT) {}
+
 
 void Controller::init() {
     pid.SetOutputLimits(-200, 200);
@@ -17,9 +19,13 @@ void Controller::setInput(float newInput) {
 }
 
 bool Controller::compute() {
-   return pid.Compute();
+    return pid.Compute();
 }
 
 double Controller::read() const {
     return output;
+}
+
+double Controller::getInput() const {
+    return input;
 }

@@ -18,13 +18,15 @@ private:
 public:
     Controller(double p, double i, double d);
 
-     void init();
+    void init();
 
     void setInput(float input);
 
     bool compute();
 
     double read() const;
+
+    double getInput() const;
 };
 
 

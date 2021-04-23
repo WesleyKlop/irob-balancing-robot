@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <TimerOne.h>
+
 #include <MotorSet.h>
 #include <Motion.h>
 #include <Controller.h>
@@ -41,6 +42,9 @@ void loop() {
     }
 
     double output = controller.read();
+    Serial.print(controller.getInput());
+    Serial.print(' ');
+    Serial.println(output);
     // When output is 0 the Arduino freezes. (Timer would tick too fast)
     if (output == 0) {
         return;

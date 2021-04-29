@@ -27,6 +27,8 @@ public:
     double read() const;
 
     double getInput() const;
+
+    void tune(double p, double i, double d);
 };
 
 

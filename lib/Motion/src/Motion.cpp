@@ -16,10 +16,10 @@ void Motion::calibrate() {
      * depend on the positioning.
      * This function needs to be called at the beginning since it can overwrite your settings!
      */
-    Serial.println("Position you MPU9250 flat and don't move it - calibrating...");
+//    Serial.println("Position you MPU9250 flat and don't move it - calibrating...");
     delay(1000);
     this->mpu9250.autoOffsets();
-    Serial.println("Done!");
+//    Serial.println("Done!");
 
     /*  This is a more accurate method for calibration. You have to determine the minimum and maximum
     *  raw acceleration values of the axes determined in the range +/- 2 g.
@@ -34,8 +34,6 @@ void Motion::init() {
     if (!this->mpu9250.init()) {
         Serial.println("MPU9250 does not respond");
         return;
-    } else {
-        Serial.println("MPU9250 is connected");
     }
 
     this->calibrate();

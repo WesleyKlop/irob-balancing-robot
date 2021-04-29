@@ -1,7 +1,3 @@
-//
-// Created by Wesley Klop on 20/04/2021.
-//
-
 #ifndef BALANCINGROBOT_CONSTANTS_H
 #define BALANCINGROBOT_CONSTANTS_H
 
@@ -17,6 +13,7 @@
 #define MOTOR2_MS1_PIN 9
 #define MOTOR2_MS2_PIN 10
 #define MOTOR2_MS3_PIN 11
+#define TUNE_PIN A2
 
 #define MOTOR_SPEED_LOWER 1500
 #define MOTOR_SPEED_UPPER 50

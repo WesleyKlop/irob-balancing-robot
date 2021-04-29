@@ -14,7 +14,7 @@ MotorSet motorSet(
         MOTOR2_MS1_PIN, MOTOR2_MS2_PIN, MOTOR2_MS3_PIN
 );
 Motion motionSensor;
-Controller controller(2, 0, 0);
+Controller controller(.79, 3, .01);
 
 unsigned long rpmToPeriod(unsigned long rpm, StepResolution resolution);
 
@@ -32,18 +32,18 @@ void setup() {
 }
 
 void loop() {
-    // Combine pitch + acceleration into our PID input
+    // Use acceleration and pitch as our input.
     controller.setInput(motionSensor.getAcceleration() - motionSensor.getPitch());
 
-    // Uses our global input & output
     if (!controller.compute()) {
-        // If we have no new data we don't have to do anything.
+        // Nothing done so just skip
         return;
     }
 
     double output = controller.read();
+    Serial.print("input:");
     Serial.print(controller.getInput());
-    Serial.print(' ');
+    Serial.print("\toutput:");
     Serial.println(output);
     // When output is 0 the Arduino freezes. (Timer would tick too fast)
     if (output == 0) {

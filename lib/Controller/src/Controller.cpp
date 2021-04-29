@@ -1,7 +1,3 @@
-//
-// Created by Wesley Klop on 22/04/2021.
-//
-
 #include "Controller.h"
 
 Controller::Controller(double p, double i, double d)
@@ -14,18 +10,22 @@ void Controller::init() {
     pid.SetMode(AUTOMATIC);
 }
 
-void Controller::setInput(float newInput) {
+inline void Controller::setInput(float newInput) {
     this->input = newInput;
 }
 
-bool Controller::compute() {
+inline bool Controller::compute() {
     return pid.Compute();
 }
 
-double Controller::read() const {
+inline double Controller::read() const {
     return output;
 }
 
-double Controller::getInput() const {
+inline double Controller::getInput() const {
     return input;
+}
+
+inline void Controller::tune(double p, double i, double d) {
+    pid.SetTunings(p, i, d);
 }
